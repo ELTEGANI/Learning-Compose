@@ -3,57 +3,99 @@ package com.atechytask.learningcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.atechytask.learningcompose.ui.theme.LearningComposeTheme
+import com.atechytask.learningcompose.ui.theme.BasicsCodelabTheme
+import org.w3c.dom.NameList
+import androidx.compose.runtime.getValue
+
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NewStory()
+            MyApp{
+                MyScreenContent()
+            }
         }
     }
 }
 
-
 @Composable
-fun NewStory() {
-    Column (modifier = Modifier.padding(18.dp)){
-        Image(
-            painter = painterResource(R.drawable.header),
-            contentDescription = null,
-            modifier = Modifier
-                .height(180.dp)
-                .fillMaxWidth(),
-            contentScale = ContentScale.Crop
-        )
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        Text(text = "a day in shark live")
-        Text(text = "Davenport")
-        Text(text = "December 12")
-
+fun MyApp(content:@Composable () -> Unit){
+    BasicsCodelabTheme {
+        Surface(color = Color.Yellow) {
+            content()
+        }
     }
 }
 
-
-@Preview
 @Composable
-fun PreviewGreetings(){
-    NewStory()
+fun MyScreenContent(names: List<String> = List(1000){"Android $it"}) {
+    val counterState = remember { mutableStateOf(0)}
+    Column(modifier = Modifier.fillMaxHeight()) {
+        NameList(names, Modifier.weight(1f))
+        Counter(
+            count = counterState.value,
+            updateCount = { newCount ->
+                counterState.value = newCount
+            }
+        )
+    }
+}
+
+@Composable
+fun Greetings(name:String){
+      var isSelected by remember { mutableStateOf(false)}
+      val backgroundColor by animateColorAsState(if(isSelected)
+          Color.Red else Color.Transparent)
+      Text(text ="Hello $name!",modifier = Modifier.padding(24.dp)
+          .background(color = backgroundColor)
+          .clickable(onClick = {isSelected = !isSelected})
+      )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview(){
+    MyApp {
+        MyScreenContent()
+    }
+}
+
+@Composable
+fun Counter(count:Int,updateCount:(Int)->Unit) {
+    Button(onClick = { updateCount(count+1) },
+            colors = ButtonDefaults.buttonColors(
+            backgroundColor = if(count > 5) Color.Green else Color.White
+            )
+    ) {
+        Text("I've been clicked $count times")
+    }
+}
+
+@Composable
+fun NameList(names:List<String>,modifier: Modifier = Modifier){
+  LazyColumn(modifier = modifier) {
+      items (items = names){name->
+           Greetings(name = name)
+           Divider(color = Color.Black)
+      }
+  }
 }
