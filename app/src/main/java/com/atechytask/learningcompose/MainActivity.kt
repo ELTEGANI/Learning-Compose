@@ -13,17 +13,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.atechytask.learningcompose.ui.theme.BasicsCodelabTheme
-import org.w3c.dom.NameList
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.runtime.getValue
-
 import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
@@ -56,9 +56,6 @@ fun MyScreenContent(names: List<String> = List(1000){"Android $it"}) {
             updateCount = { newCount ->
                 counterState.value = newCount
             }
-        )
-    }
-}
 
 @Composable
 fun Greetings(name:String){
@@ -70,6 +67,12 @@ fun Greetings(name:String){
           .clickable(onClick = {isSelected = !isSelected})
       )
 }
+        Spacer(modifier = Modifier.height(18.dp))
+
+        Text(text = "a day in shark live,a day in shark livea day in shark livea day in shark livea day in shark livea day in shark livea day in shark live",style = typography.h6,
+        maxLines = 2,overflow = TextOverflow.Ellipsis)
+        Text(text = "Davenport",style = typography.body1)
+        Text(text = "December 12",style = typography.body2)
 
 @Preview(showBackground = true)
 @Composable
